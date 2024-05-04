@@ -3,11 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>MemoPadServer</title>
+    <link rel="stylesheet" href="css/sample.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/862824129a.js" crossorigin="anonymous"></script>
 </head>
 <body>
     
-
+    <header>
+        <h1><i class="fa-solid fa-mountain-sun" style="color: #74C0FC;"></i>バタフライメモリー</h1>
+        </header>
+        <main>
+            <p>下記をクリックして名前<br><span class="span">同じ蝶々には番号入れたほうがいいよ</span></p>
+            <input class="name" type="text" id="name">
+            <select name="" calss="sex" id="sex">
+                <option value="" hidden>雌雄選択</option>
+                <option value="雄">雄</option>
+                <option value="雌">雌</option>
+                <option value="不明">不明</option>
+                <option value="雌雄胴体">雌雄胴体</option>
+            </select>
+        
+            <button class="positionBtn" onclick="test()">位置情報取得</button>
+            <p>iPhoneの時は<span class="span">safariの位置情報サービスをON</span>にしてね</p>
+            <div class="position">
+                <div class="latitude">緯度：<span id="latitude" value="lati"></span></div>
+                <div class="longitude">経度：<span id="longitude" value="longi"></span></div>
+            </div>
+            
+            <!-- img登録 -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="upload-area"> 
+                    <!--下記は雲イラスト  -->
+                    <p><i class="fas fa-cloud-upload-alt"></i>下記をclickかD&Dで写真！</p>
+                    <input class="img" type="file" name="upload_file" id="input-files">
+                </div>
+            
+            </form>
+        
+            <textarea id="comment" placeholder="採集状況　簡単な場所など"></textarea>
+            <ul>
+                <li id="save">上記を<span class="span">Save</span></li>
+                <li id="clear">全てを<span class="span">Clear</span></li>
+            </ul>
+        
+            <!-- 任意のデータのみを消すよう -->
+            <p class="" for="keys">任意のデータを消したいときは下から選んでね</p>
+                <select id="keys" >
+                    <option value="" hidden>名前を選択</option>
+                    <!-- キーの選択肢はJavaScriptで動的に生成する -->
+                </select>
+            <button class=deleat id="delete">上で選んだデータをDelete</button>
+        
+        
+        
+        </main>
+        <table id="list">
+        <!-- ここに追加データが挿入される -->
+        </table>
+        
 
 
 
