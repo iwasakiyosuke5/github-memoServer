@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MemoPadServer</title>
     <link rel="stylesheet" href="css/sample.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/862824129a.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -14,6 +14,7 @@
         <h1><i class="fa-solid fa-mountain-sun" style="color: #74C0FC;"></i>バタフライメモリー</h1>
         </header>
         <main>
+        
             <p>下記をクリックして名前<br><span class="span">同じ蝶々には番号入れたほうがいいよ</span></p>
             <input class="name" type="text" id="name">
             <select name="" calss="sex" id="sex">
@@ -30,7 +31,9 @@
                 <div class="latitude">緯度：<span id="latitude" value="lati"></span></div>
                 <div class="longitude">経度：<span id="longitude" value="longi"></span></div>
             </div>
-            
+            <div>
+                <div id="view"></div>
+            </div>            
             <!-- img登録 -->
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="upload-area"> 
@@ -67,42 +70,102 @@
 
 
 
+<script>
+// 位置情報取得
+function test() {
+    navigator.geolocation.getCurrentPosition(test2);
+    }
+
+    function test2(position) {
+    const lati =  position.coords.latitude;
+    const longi =  position.coords.longitude;
+    console.log(lati);
+    console.log(longi);
+
+    $("#latitude").text(lati);
+    $("#longitude").text(longi);
+
+//＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+//MAP表示処理
+//＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+const key   = "9791306e542ff7bb5de08402ca917b9a";  //***自分のKEYを！！！！！！！！！！！！！！！***
+// const lat   = $("#latitude").val(lati);   //取得した緯度を使用するため必要なし
+// const lon   = $("#longitude").val(longi);  //取得した経度を使用するため必要なし
+const icon  = "https://openweathermap.org/img/wn/"
+
+//＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+//OpenWeatherAPI（天気情報を取得）5DAY/3hour
+//＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+const url = 'https://api.openweathermap.org/data/2.5/weather?lat='+lati+'&lon='+longi+'&appid='+key+'&lang=ja';
+
+
+$.ajax({
+    url:url,
+    type:'get',
+    cache:false,
+    dataType:'json'
+}).done(function(data){
+    // console.log(data.list[0].dt_txt);//オブジェクト変数を確認
+    console.log(data);//オブジェクト変数を確認
+
+    
+    let html = `
+            <div> 
+                <div>エリア：${data.name}</div>
+                <div>天気：${data.weather[0].description}</div>
+                <div><img src="${icon+data.weather[0].icon}@2x.png"></div>
+                <div>気温：${data.main.temp}K</div>
+                <div>風速：${data.wind.speed}m/s</div>
+                <div>湿気：${data.main.humidity}%</div>
+            </div>
+        `;    
+    
+    $("#view").append(html);
+    // $("#area").html(data.city.name);
+});
+};
+
+// 日付取得
+let date = new Date();
+console.log(date);
 
 
 
 
 
-
-
-
-
+</script>
 
 
 
 <!-- ここからfirebase -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
-        from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyADZXapjuRCMDGTXQGWwPaDi6UJnTj0FlY",
-          authDomain: "gsmemo-5dec7.firebaseapp.com",
-          projectId: "gsmemo-5dec7",
-          storageBucket: "gsmemo-5dec7.appspot.com",
-          messagingSenderId: "823145330668",
-          appId: "1:823145330668:web:b6031f7ddd4ffbbde072c9"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app); //RDBを使うよ
-        const dbRef = ref(db, "memoServer"); //RDBの”chat”を使うよ
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+    from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyADZXapjuRCMDGTXQGWwPaDi6UJnTj0FlY",
+        authDomain: "gsmemo-5dec7.firebaseapp.com",
+        projectId: "gsmemo-5dec7",
+        storageBucket: "gsmemo-5dec7.appspot.com",
+        messagingSenderId: "823145330668",
+        appId: "1:823145330668:web:b6031f7ddd4ffbbde072c9"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app); //RDBを使うよ
+    const dbRef = ref(db, "memoServer"); //RDBの”chat”を使うよ
 
-      </script>    
+
+
+
+</script>    
+<footer><small>    <i class="fa-solid fa-globe" style="color: #c11f96;"></i>
+</small></footer>
 </body>
 </html>
