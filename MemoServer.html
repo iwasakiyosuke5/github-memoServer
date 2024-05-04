@@ -61,6 +61,9 @@
         
         
         </main>
+
+        <div id="output" style="overflow: auto;height: 300px;"></div>
+
         <table id="list">
         <!-- ここに追加データが挿入される -->
         </table>
@@ -74,9 +77,9 @@
 // 位置情報取得
 function test() {
     navigator.geolocation.getCurrentPosition(test2);
-    }
+}
 
-    function test2(position) {
+function test2(position) {
     const lati =  position.coords.latitude;
     const longi =  position.coords.longitude;
     console.log(lati);
@@ -109,12 +112,12 @@ $.ajax({
     
     let html = `
             <div> 
-                <div>エリア：${data.name}</div>
-                <div>天気：${data.weather[0].description}</div>
-                <div><img src="${icon+data.weather[0].icon}@2x.png"></div>
-                <div>気温：${data.main.temp}K</div>
-                <div>風速：${data.wind.speed}m/s</div>
-                <div>湿気：${data.main.humidity}%</div>
+                <div id="area">エリア：${data.name}</div>
+                <div id="Wdescription">天気：${data.weather[0].description}</div>
+                <div><img id="icon" src="${icon+data.weather[0].icon}@2x.png"></div>
+                <div id="K">気温：${data.main.temp}K</div>
+                <div id="Wspeed">風速：${data.wind.speed}m/s</div>
+                <div id="humidity">湿気：${data.main.humidity}%</div>
             </div>
         `;    
     
@@ -154,11 +157,27 @@ console.log(date);
         appId: "1:823145330668:web:b6031f7ddd4ffbbde072c9"
     };
     
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app); //RDBを使うよ
-    const dbRef = ref(db, "memoServer"); //RDBの”chat”を使うよ
+    const db = getDatabase(app);
+    const dbRef = ref(db, "memoServer"); // ここはあなたのデータベース参照に合わせてください
 
+    $("#save").on("click",function(){
+        const msg = {
+            name: $("#name").val(),
+            sex: $("#sex").val(),
+            area: $("#area").text(), // `text()`を使用してデータを取得
+            latitude: $("#latitude").text(), // `text()`を使用して緯度を取得
+            longitude: $("#longitude").text(), // `text()`を使用して経度を取得
+            Wdescription: $("#Wdescription").text(), // `text()`を使用してデータを取得
+            icon: $("#icon").attr('src'), 
+            temp: $("#K").text(), // `text()`を使用して経度を取得
+            Wspeed: $("#Wspeed").text(), // `text()`を使用して経度を取得
+            humidity: $("#humidity").text(), // `text()`を使用して経度を取得
+               
+        }
+        const newEntry = push(dbRef);
+        set(newEntry, msg);
+    });
 
 
 
