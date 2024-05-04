@@ -31,8 +31,9 @@
                 <div class="latitude">緯度：<span id="latitude" value="lati"></span></div>
                 <div class="longitude">経度：<span id="longitude" value="longi"></span></div>
             </div>
+
             <div>
-                <div id="view"></div>
+                <div class="view" id="view" style="overflow: auto;height: 250px;"></div>
             </div>            
             <!-- img登録 -->
             <form action="" method="POST" enctype="multipart/form-data">
@@ -112,12 +113,16 @@ $.ajax({
     
     let html = `
             <div> 
-                <div id="area">エリア：${data.name}</div>
-                <div id="Wdescription">天気：${data.weather[0].description}</div>
-                <div><img id="icon" src="${icon+data.weather[0].icon}@2x.png"></div>
-                <div id="K">気温：${data.main.temp}K</div>
-                <div id="Wspeed">風速：${data.wind.speed}m/s</div>
-                <div id="humidity">湿気：${data.main.humidity}%</div>
+                <div class="AWI">
+                    <div id="area">エリア：${data.name}</div>
+                    <div id="Wdescription">天気：${data.weather[0].description}</div>
+                    <div><img id="icon" src="${icon+data.weather[0].icon}@2x.png"></div>
+                </div>
+                <div class="KWH">
+                    <div id="K">気温：${data.main.temp}K</div>
+                    <div id="Wspeed">風速：${data.wind.speed}m/s</div>
+                    <div id="humidity">湿気：${data.main.humidity}%</div>
+                </div>
             </div>
         `;    
     
@@ -144,9 +149,8 @@ console.log(date);
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
     import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
     from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-    
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyADZXapjuRCMDGTXQGWwPaDi6UJnTj0FlY",
@@ -157,26 +161,55 @@ console.log(date);
         appId: "1:823145330668:web:b6031f7ddd4ffbbde072c9"
     };
     
+    // 画像ファイルのアップロード
+    $("#input-files").on("change", function(e) {
+        const file = e.target.files[0];
+        const storageRef = sRef(storage, 'images/' + file.name); // 'images/'は任意のパス
+
+        uploadBytes(storageRef, file).then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+        });
+    });
+
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const storage = getStorage(app);
     const dbRef = ref(db, "memoServer"); // ここはあなたのデータベース参照に合わせてください
 
-    $("#save").on("click",function(){
+    // saveBtnを押した時の機能
+    $("#save").on("click", async function(){
+        let imageUrl = "";
+        if (document.getElementById('input-files').files.length > 0) {
+        const file = document.getElementById('input-files').files[0];
+        const storageRef = sRef(storage, 'images/' + file.name);
+        try{
+            const snapshot = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(snapshot.ref);
+        } catch (error) {
+            console.error('Error uploading file and getting download URL', error);
+        }
+        }
+
+
+
         const msg = {
             name: $("#name").val(),
             sex: $("#sex").val(),
-            area: $("#area").text(), // `text()`を使用してデータを取得
-            latitude: $("#latitude").text(), // `text()`を使用して緯度を取得
-            longitude: $("#longitude").text(), // `text()`を使用して経度を取得
-            Wdescription: $("#Wdescription").text(), // `text()`を使用してデータを取得
+            area: $("#area").text(), 
+            latitude: $("#latitude").text(), 
+            longitude: $("#longitude").text(), 
+            Wdescription: $("#Wdescription").text(), 
             icon: $("#icon").attr('src'), 
-            temp: $("#K").text(), // `text()`を使用して経度を取得
-            Wspeed: $("#Wspeed").text(), // `text()`を使用して経度を取得
-            humidity: $("#humidity").text(), // `text()`を使用して経度を取得
-               
-        }
-        const newEntry = push(dbRef);
-        set(newEntry, msg);
+            temp: $("#K").text(), 
+            Wspeed: $("#Wspeed").text(), 
+            humidity: $("#humidity").text(), 
+            imageUrl: imageUrl,
+            comment: $("#comment").val() 
+        };
+
+            const newEntry = push(dbRef);
+            set(newEntry, msg);
+
     });
 
 

@@ -33,6 +33,20 @@ select{
     box-shadow: 3px 3px 3px 3px #555;
     background-color:rgb(239, 239, 241);
 }
+.view{
+    font-size:80%;
+    border: 2px solid ;
+}
+
+.AWI{
+    margin-left: 3%;
+    
+}
+
+.KWH{
+    display: flex;
+    justify-content: space-around;
+}
 
 .deleat{
     display: block;
