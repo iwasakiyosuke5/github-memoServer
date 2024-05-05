@@ -247,6 +247,7 @@ console.log(date);
                     </tr>
                 `;
                 $("#list").append(html);
+                $("#output").scrollTop($("#output")[0].scrollHeight);
             }).catch(error => {
                 console.error('Error saving data to the database', error);
             });
