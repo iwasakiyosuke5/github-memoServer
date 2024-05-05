@@ -48,6 +48,42 @@ select{
     display: flex;
     justify-content: space-around;
 }
+table{
+    margin:0;
+    padding:0;
+    /* width:100%; */
+    th{
+        font-size: 10px;
+    }
+    /* tr{
+        width:100%;
+    } */
+    thead th {
+        position: sticky;
+        top: 0;
+        background-color: #1bd4f0;
+    }
+    .short {
+        width: 10%;
+    }
+    .veryShort {
+        width: 5%;
+    }
+}
+.Date{
+    font-size: 10px;
+}
+.key {
+    font-size: 10px;
+}
+.imageIcon img{
+    width: 50%;
+    height: auto;
+}
+.imageUrl img{
+    width: 100%;
+    height: auto;
+}
 
 .deleat{
     display: block;

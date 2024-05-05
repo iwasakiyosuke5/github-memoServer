@@ -63,30 +63,31 @@
         
         </main>
 
-        <div id="output" style="overflow: auto;height: 300px;"></div>
+        <div id="output" style="overflow: auto; height: 300px;">
 
-        <table id="list">
+        <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Sex</th>
-                    <th>Area</th>
-                    <th>Coordinates</th>
-                    <th>Weather Description</th>
-                    <th>Icon</th>
-                    <th>Temperature</th>
-                    <th>Wind Speed</th>
-                    <th>Humidity</th>
+                    <th class="short">Key</th>
+                    <th class="short">Name</th>
+                    <th class="veryShort">Sex</th>
+                    <th class="short">Area</th>
+                    <th class="short">Coordinates</th>
+                    <th class="short">Weather Description</th>
+                    <th class="veryShort">Icon</th>
+                    <th class="short">Temperature</th>
+                    <th class="short">Wind Speed</th>
+                    <th class="short">Humidity</th>
                     <th>Image</th>
                     <th>Comment</th>
                     <th>Date</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="list">
                 <!-- データがここに挿入されます -->
             </tbody>
         </table>
-        
+        </div>
 
 
 
@@ -144,7 +145,7 @@ $.ajax({
             </div>
         `;    
     
-    $("#view").append(html);
+    $("#view").html(html);
     // $("#area").html(data.city.name);
 });
 };
@@ -230,18 +231,19 @@ console.log(date);
             set(newEntry, msg).then(() => {
                 const html = `
                     <tr>
+                        <td class="key">${newEntry.key}</td>
                         <td>${msg.name}</td>
                         <td>${msg.sex}</td>
                         <td>${msg.area}</td>
                         <td>${msg.latitude}, ${msg.longitude}</td>
                         <td>${msg.Wdescription}</td>
-                        <td><img src="${msg.icon}" alt="Weather icon"></td>
+                        <td class="imageIcon"><img src="${msg.icon}" alt="Weather icon"></td>
                         <td>${msg.temp}</td>
                         <td>${msg.Wspeed}</td>
                         <td>${msg.humidity}</td>
-                        <td><img src="${msg.imageUrl}" alt="Uploaded image"></td>
+                        <td class="imageUrl"><img src="${msg.imageUrl}" alt="Uploaded image"></td>
                         <td>${msg.comment}</td>
-                        <td>${msg.date}</td>
+                        <td class="Date">${msg.date}</td>
                     </tr>
                 `;
                 $("#list").append(html);
