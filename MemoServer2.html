@@ -52,8 +52,8 @@
             </ul>
         
             <!-- 任意のデータのみを消すよう -->
-            <p class="" for="keys">任意のデータを消したいときは下から選んでね</p>
-                <select id="keys" >
+            <p class="" for="">任意のデータを消したいときは下から選んでね</p>
+                <select id="dataSelect" >
                     <option value="" hidden>名前を選択</option>
                     <!-- キーの選択肢はJavaScriptで動的に生成する -->
                 </select>
@@ -235,7 +235,7 @@ console.log(date);
         const msg = data.val();//ここでデータ取得
         // const key = data.key; 
         let html = `
-                <tr>
+                <tr id="row-${data.key}">
                     <td class="key">${data.key}</td>
                     <td>${msg.name}</td>
                     <td>${msg.sex}</td>
@@ -256,19 +256,7 @@ console.log(date);
     
 
 
-// 2.clear クリックイベント
-// $("#clear").on("click",function(){
-//     const result = confirm("バタフライメモリーを消しますか？元に戻りませんよ？");
-//     if (result) {
-//         const dbRef = ref(db, "memoServer");
-//         set(dbRef, null).then(() => {
-//         $("#list").empty();
-//         alert("データが全て削除されました。");
-//     }else{
-//         // cancelなので記載しない
-//     });
-//     }
-// });
+
 $("#clear").on("click", function() {
     // ユーザーに確認を取る
     if (confirm("バタフライメモリーを消しますか？元に戻りませんよ？")) {
@@ -287,6 +275,28 @@ $("#clear").on("click", function() {
     }
 });
 
+// 任意のデータのみ消す
+onChildAdded(dbRef, (snapshot) => {
+        const key = snapshot.key;
+        const data = snapshot.val();
+        const option = `<option value="${key}">${data.name} (${key})</option>`;
+        $("#dataSelect").append(option);
+    });
+
+$("#delete").on("click", function() {
+        const selectedKey = $("#dataSelect").val();
+        if (confirm("削除しますか？")) {
+            const itemRef = ref(db, `memoServer/${selectedKey}`);
+            remove(itemRef).then(() => {
+                $("#dataSelect option[value='" + selectedKey + "']").remove();
+                $(`#row-${selectedKey}`).remove(); // HTMLから行を削除
+            }).catch(error => {
+                console.error("Error deleting data: ", error);
+            });
+        }else{
+
+        }
+    });
 
 </script>    
 <footer><small>    <i class="fa-solid fa-globe" style="color: #c11f96;"></i>
