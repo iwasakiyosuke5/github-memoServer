@@ -12,20 +12,21 @@
     
     <header>
         <h1><i class="fa-solid fa-mountain-sun" style="color: #74C0FC;"></i>バタフライメモリー</h1>
-        </header>
-        <main>
+    </header>
+
+    <main>
         
-            <p>下記をクリックして名前<br><span class="span">同じ蝶々には番号入れたほうがいいよ</span></p>
+            <p>①下記をクリックして名前<br><span class="span">同じ蝶々には番号入れたほうがいいよ</span></p>
             <input class="name" type="text" id="name">
             <select name="" calss="sex" id="sex">
-                <option value="" hidden>雌雄選択</option>
+                <option value="" hidden>②雌雄選択</option>
                 <option value="雄">雄</option>
                 <option value="雌">雌</option>
                 <option value="不明">不明</option>
                 <option value="雌雄胴体">雌雄胴体</option>
             </select>
         
-            <button class="positionBtn" onclick="test()">位置情報取得</button>
+            <button class="positionBtn" onclick="test()">③位置情報取得</button>
             <p>iPhoneの時は<span class="span">safariの位置情報サービスをON</span>にしてね</p>
             <div class="position">
                 <div class="latitude">緯度：<span id="latitude" value="lati"></span></div>
@@ -33,63 +34,75 @@
             </div>
 
             <div>
-                <div class="view" id="view" style="overflow: auto;height: 250px;"></div>
+                
+                <div class="view" id="view" style="overflow: auto;height: 250px;">
+                <p>天候情報</p>
+
+                </div>
             </div>            
             <!-- img登録 -->
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="upload-area"> 
                     <!--下記は雲イラスト  -->
-                    <p><i class="fas fa-cloud-upload-alt"></i>下記をclickかD&Dで写真！</p>
+                    <p>④<i class="fas fa-cloud-upload-alt"></i>下記をclickかD&Dで写真！</p>
                     <input class="img" type="file" name="upload_file" id="input-files">
                 </div>
             
             </form>
         
-            <textarea id="comment" placeholder="採集状況　簡単な場所など"></textarea>
+            <textarea id="comment" placeholder="⑤採集状況　簡単な場所など"></textarea>
             <ul>
                 <li id="save">上記を<span class="span">Save</span></li>
                 <li id="clear">全てを<span class="span">Clear</span></li>
             </ul>
         
             <!-- 任意のデータのみを消すよう -->
+        <div class="dataDeleteBox">
             <p class="" for="">任意のデータを消したいときは下から選んでね</p>
+            <div class="dataDelete">
                 <select id="dataSelect" >
                     <option value="" hidden>名前を選択</option>
                     <!-- キーの選択肢はJavaScriptで動的に生成する -->
                 </select>
-            <button class=deleat id="delete">上で選んだデータをDelete</button>
-        
-        
-        
-        </main>
-
-        <div id="output" style="overflow: auto; height: 300px;">
-
-        <table>
-            <thead>
-                <tr>
-                    <th class="short">Key</th>
-                    <th class="short">Name</th>
-                    <th class="veryShort">Sex</th>
-                    <th class="short">Area</th>
-                    <th class="short">Coordinates</th>
-                    <th class="short">Weather Description</th>
-                    <!-- <th class="veryShort">Icon</th> -->
-                    <th class="short">Temperature</th>
-                    <th class="short">Wind Speed</th>
-                    <th class="short">Humidity</th>
-                    <th>Image</th>
-                    <th>Comment</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody id="list">
-                <!-- データがここに挿入されます -->
-            </tbody>
-        </table>
+                <button class=deleat id="delete">選んだデータをDelete</button>
+            </div>
         </div>
 
+        
+    </main>
 
+    <div id="output" style="overflow: auto; height: 300px;">
+    <table>
+        <thead>
+            <tr>
+                <th class="short">Key</th>
+                <th class="short">Name</th>
+                <th class="veryShort">Sex</th>
+                <th class="short">Area</th>
+                <th class="short">Coordinates</th>
+                <th class="short">Weather Description</th>
+                <!-- <th class="veryShort">Icon</th> -->
+                <th class="short">Temperature</th>
+                <th class="short">Wind Speed</th>
+                <th class="short">Humidity</th>
+                <th>Image</th>
+                <th>Comment</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+            <!-- データがここに挿入されます -->
+        </tbody>
+    </table>
+    </div>
+    <div class="filterBox1">
+        <p for="">日付でソート！</p>
+        <div class="filterBox2">
+            <input class="dateChoice" type="date" name="" id="dateChoice">
+            <button class="filter" id="filterDate">フィルタ</button>
+        </div>
+        <div id="filteredResults"></div>      
+    </div>
 
 
 
@@ -297,6 +310,61 @@ $("#delete").on("click", function() {
 
         }
     });
+
+$("#filterDate").on("click", function() {
+    const chosenDate = $("#dateChoice").val(); // 選択した日付を取得
+    const formattedDate = new Date(chosenDate).toDateString(); // 日付を整形
+
+    // 新しいテーブルのセットアップ
+    $("#filteredResults").html(`
+        <table>
+            <thead>
+                <tr>
+                    <th class="short">Key</th>
+                    <th class="short">Name</th>
+                    <th class="veryShort">Sex</th>
+                    <th class="short">Area</th>
+                    <th class="short">Coordinates</th>
+                    <th class="short">Weather Description</th>
+                    <!-- <th class="veryShort">Icon</th> -->
+                    <th class="short">Temperature</th>
+                    <th class="short">Wind Speed</th>
+                    <th class="short">Humidity</th>
+                    <th>Image</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="filtered-list"></tbody>
+        </table>
+    `);
+
+    // 日付に基づいてデータをフィルタリング
+    onChildAdded(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        const dataDate = new Date(data.date).toDateString(); // データの日付を整形
+
+        if (dataDate === formattedDate) { // フィルタ条件に一致する場合のみ表示
+            const html = `
+                <tr>
+                    <td>${snapshot.key}</td>
+                    <td>${data.name}</td>
+                    <td>${data.sex}</td>
+                    <td>${data.area}</td>
+                    <td>${data.latitude}, ${data.longitude}</td>
+                    <td>${data.Wdescription}</td>
+                    <td>${data.temp}</td>
+                    <td>${data.Wspeed}</td>
+                    <td>${data.humidity}</td>
+                    <td class="imageUrl"><img src="${data.imageUrl}" alt="Uploaded image"></td>
+                    <td>${data.comment}</td>
+                    <td class="Date">${data.date}</td>
+                </tr>
+            `;
+            $("#filtered-list").append(html);
+        }
+    });
+});
 
 </script>    
 <footer><small>    <i class="fa-solid fa-globe" style="color: #c11f96;"></i>
