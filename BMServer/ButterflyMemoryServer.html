@@ -27,7 +27,7 @@
             </select>
         
             <button class="positionBtn" onclick="test()">③位置情報取得</button>
-            <p>iPhoneの時は<span class="span">safariの位置情報サービスをON</span>にしてね</p>
+            <p>iPhoneの時は<br><span class="span">safariの位置情報サービスをON</span>にしてね</p>
             <div class="position">
                 <div class="latitude">緯度：<span id="latitude" value="lati"></span></div>
                 <div class="longitude">経度：<span id="longitude" value="longi"></span></div>
@@ -95,6 +95,7 @@
         </tbody>
     </table>
     </div>
+    <!-- 日付でソート -->
     <div class="filterBox1">
         <p for="">日付でソート！</p>
         <div class="filterBox2">
@@ -104,7 +105,16 @@
         <div id="filteredResults"></div>      
     </div>
 
-
+<!-- 日付でソート -->
+    <!-- <div class="searchBox1">
+        <p for="">名前で検索！</p>
+        <div class="searchBox2">
+            <input class="searchName" type="" name="" id="searchName">
+            <button class="search" id="search">検索！</button>
+        </div>
+        <div id="searchResults"></div>      
+    </div>
+     -->
 
 <script>
 // 位置情報取得
@@ -175,7 +185,7 @@ console.log(date);
 
 
 
-<!-- ここからfirebase -->
+<!-- ここからfirebase関係 -->
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
@@ -365,6 +375,15 @@ $("#filterDate").on("click", function() {
         }
     });
 });
+// 名前検索
+// $("#search").on("click", function() {
+//         // 入力された検索キーワードを取得
+//         const getSearchName = $("#searchName").val().trim();
+
+//         // クエリを使って `name` フィールドが検索キーワードに一致する項目を取得
+//         const dbRef = ref(db, "memoServer");
+//         const searchQuery = query(dbRef, orderByChild("name"), equalTo(getSearchName));
+
 
 </script>    
 <footer><small>    <i class="fa-solid fa-globe" style="color: #c11f96;"></i>
